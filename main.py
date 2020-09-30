@@ -1,4 +1,4 @@
-import turtle, random, time
+import turtle, random, time, os
 
 wn = turtle.Screen()
 wn.bgcolor('white')
@@ -10,12 +10,13 @@ dice = list(range(1, 7))
 
 colors = ['red', 'green', 'blue', 'black', 'purple', 'orange']
 
-winers = []
+winers = {}
 
 class Player(turtle.Turtle):
     def __init__(self, x, y, id, color='black', shape='turtle'):
         super().__init__(shape)
         self.hideturtle()
+        self.speed(0)
         self.id = id
         self.penup()
         self.color(color)
@@ -33,9 +34,9 @@ class Player(turtle.Turtle):
     def check_win(self):
       if not self.end_run:
         if self.xcor() >= 300:
-          winers.append(self.id)
           self.time_elapsed = round(time.time() - start, 2)
           print(f'Turtle id: {self.id} finished at time {self.time_elapsed}!')
+          winers[self.id] = self.time_elapsed
           self.end_run = 1
 
 players = []
@@ -43,6 +44,7 @@ x = -300
 y = 200
 
 line = turtle.Turtle()
+line.speed(0)
 line.hideturtle()
 line.color('gray')
 line.penup()
@@ -67,7 +69,11 @@ while race:
         if len(winers) == len(players):
           race = False
 
+os.system('cls' if os.name=='nt' else 'clear')
+
 print('Race ends. See the position reached by ours players')
 
-for idx, w in enumerate(winers):
-  print(f'#{idx+1} - Turtle id: {w}')
+count = 1
+for id, t in winers.items():
+  print(f'#{count} - Turtle id: {id} - Time elapsed: {t}')
+  count += 1
